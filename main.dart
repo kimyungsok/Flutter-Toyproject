@@ -1,5 +1,3 @@
-// ignore_for_file: depend_on_referenced_packages
-
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -14,17 +12,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'ToDoApp',
+      title: 'TodoApp',
       home: TableEventsExample(),
     );
   }
 }
 
-class TableEventsExample extends StatefulWidget {
+class TableEventsExample extends StatefulWidget{
   @override
   _TableEventsExampleState createState() => _TableEventsExampleState();
 }
 
+String todothing="책 읽기";
 class _TableEventsExampleState extends State<TableEventsExample> {
   late final ValueNotifier<List<Event>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
@@ -100,7 +99,9 @@ class _TableEventsExampleState extends State<TableEventsExample> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {Scaffold.of(context).openEndDrawer();},
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => SetThing()));
+        },
         child: Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -211,6 +212,104 @@ class _TableEventsExampleState extends State<TableEventsExample> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+
+class SetThing extends StatefulWidget {
+  @override
+  State<SetThing> createState() => TodoThing();
+}
+
+class TodoThing extends State<SetThing> {
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+        appBar: AppBar(
+          title : Text(' '),
+          actions: <Widget>[IconButton(
+            icon:Icon(Icons.edit),
+            onPressed: (){
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => TodoThingEdit())).then((value){
+                setState((){});  //State 객체의 상태가 변경되었다는 것을 프레임워크에 알리는 메소드, 프레임워크는 다시 build()함수를 호출한다.
+              });
+            },
+          )],
+          backgroundColor: Colors.black45,
+        ),
+        body: Container(
+            child: Stack(
+                children: [
+                  Container(
+                      padding: EdgeInsets.all(20.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            Text('$todothing',style : TextStyle(
+                                fontSize: 35.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                            ),
+                            Row(
+                              children: [
+                                Text('▫ 6:00 PM - Thursday, 29 Apr, 2022'),
+                                Divider(
+                                  height:15.0,
+                                  thickness:2.0,
+                                  color: Colors.blue,
+                                ),
+                              ],
+                            )
+                          ]
+                      )
+
+                  )
+                ]
+            )
+        )
+    ); //scaffold
+  }
+
+}
+
+class TodoThingEdit extends StatelessWidget{
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      appBar: AppBar(
+        title : Text(' '),
+        actions: <Widget>[IconButton(
+          icon:Icon(Icons.check),
+          onPressed: (){
+            Navigator.pop(
+                context);
+          },
+        )],
+        backgroundColor: Colors.black45,
+      ),
+      body: Container(
+        margin: EdgeInsets.all(10),
+        padding:EdgeInsets.all(5),
+        child: Stack(
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText:'할 일을 입력하세요',
+                labelText:'ㅇㅇㅇ',
+              ),
+              onChanged: (text){
+                todothing = text;
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
